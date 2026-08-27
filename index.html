@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FOG Canada 55+ | IVVA Benidorm 2026 Championship Hub</title>
+  <meta name="description" content="Official Team Hub for FOG Canada Men 55+ competing at the IVVA World Veteran Volleyball & Beach Volleyball Championship in Benidorm, Spain.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="shortcut icon" href="favicon-16x16.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Header Bar -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand-group">
+        <div class="brand-badge">
+          <span class="flag-icon">🇨🇦</span>
+          <span class="flag-sep">➔</span>
+          <img src="spain-volleyball-icon.png" alt="Spain Volleyball" class="brand-logo-img">
+        </div>
+        <div class="brand-titles">
+          <h1>FOG Canada <span class="badge-cat">MEN 55+</span></h1>
+          <p class="subtitle">IVVA World Championship Benidorm 2026 • Indoor & Beach</p>
+        </div>
+      </div>
+      
+      <!-- Live Dual Timezone Clocks -->
+      <div class="dual-clock-bar">
+        <div class="clock-item">
+          <div class="clock-label-group">
+            <span class="clock-flag">🍁</span>
+            <select id="canadaTzSelect" class="tz-select" title="Select Canadian Timezone">
+              <option value="America/Toronto" selected>Canada (EDT / Toronto / Montreal / Halifax)</option>
+              <option value="America/Vancouver">Canada (PDT / Vancouver)</option>
+              <option value="America/Edmonton">Canada (MDT / Calgary / Edmonton)</option>
+              <option value="America/Winnipeg">Canada (CDT / Winnipeg)</option>
+              <option value="America/Halifax">Canada (ADT / Atlantic)</option>
+            </select>
+          </div>
+          <div class="clock-display" id="canadaClock">--:--:-- --</div>
+        </div>
+
+        <div class="clock-divider">
+          <span class="time-diff-badge" id="timeDiffBadge">+6 hrs ahead</span>
+        </div>
+
+        <div class="clock-item highlight-clock">
+          <div class="clock-label-group">
+            <span class="clock-flag">🇪🇸</span>
+            <span class="clock-name">Benidorm, Spain (CEST)</span>
+          </div>
+          <div class="clock-display" id="spainClock">--:--:-- --</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs-container">
+      <div class="nav-tabs" role="tablist">
+        <button class="tab-btn active" data-tab="roster" role="tab" id="tab-roster">
+          <span class="tab-icon">👥</span> FOG Roster & Directory
+        </button>
+        <button class="tab-btn" data-tab="rooms" role="tab" id="tab-rooms">
+          <span class="tab-icon">🛏️</span> Rooming & Accommodations
+        </button>
+        <button class="tab-btn" data-tab="flights" role="tab" id="tab-flights">
+          <span class="tab-icon">✈️</span> Flights & Arrivals
+        </button>
+        <button class="tab-btn" data-tab="schedule" role="tab" id="tab-schedule">
+          <span class="tab-icon">🏐</span> Matches & Checkpoints
+        </button>
+        <button class="tab-btn" data-tab="finances" role="tab" id="tab-finances">
+          <span class="tab-icon">💶</span> CAD ⇄ EUR & Invoice
+        </button>
+        <button class="tab-btn" data-tab="venues" role="tab" id="tab-venues">
+          <span class="tab-icon">📍</span> Venues & Transport
+        </button>
+        <button class="tab-btn" data-tab="spanish" role="tab" id="tab-spanish">
+          <span class="tab-icon">💬</span> Spanish Audio-Cards
+        </button>
+        <button class="tab-btn" data-tab="physio" role="tab" id="tab-physio">
+          <span class="tab-icon">🩹</span> 55+ Physio & Packing
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content Areas -->
+  <main class="app-main">
+
+    <!-- ======================================================== -->
+    <!-- TAB 1: ROSTER, PASSES & HOTEL STATUS -->
+    <!-- ======================================================== -->
+    <section id="pane-roster" class="tab-pane active">
+      <div class="pane-header">
+        <div>
+          <h2>FOG Canada Official Team Roster & Attendance Directory</h2>
+          <p class="section-desc">Synced with Google Sheet & IVVA Roster Form • 10 Confirmed Players, 1 Staff Coach, 3 Supporters, 4 Declined</p>
+        </div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary" id="btnExportRoster">📋 Print Roster Form</button>
+          <button class="btn btn-primary" id="btnOpenAddPlayer">➕ Add Member</button>
+        </div>
+      </div>
+
+      <!-- Quick Action / Deadline Banner -->
+      <div class="alert-banner">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-content">
+          <strong>IVVA Deadline Reminder (Aug 24, 2026):</strong> T-shirt sizes must be finalized by <strong>24.08.2026</strong> or random sizes will be allocated. 
+          <span class="badge-pending-count" id="pendingSizesBadge">Checking sizes...</span>
+        </div>
+      </div>
+
+      <!-- Attendance Filter Bar -->
+      <div class="flight-filters-bar" style="margin-bottom: 1.5rem;">
+        <div class="filter-group">
+          <label for="rosterStatusFilter">Attendance Filter:</label>
+          <select id="rosterStatusFilter" class="form-control form-control-sm">
+            <option value="ALL" selected>All Members (10 Confirmed, 1 Coach, 3 Supporters, 4 Declined / No Response)</option>
+            <option value="CONFIRMED">✅ Confirmed Traveling Players (10 Players)</option>
+            <option value="STAFF">👔 Team Coach / Staff (George Tokarsky)</option>
+            <option value="FAMILY">👥 Accompanying Family & Supporters (3 Members)</option>
+            <option value="DECLINED">❌ Declined & No Response (4 Members)</option>
+          </select>
+        </div>
+        <div class="flight-stat-pill">
+          <span>Squad Status:</span>
+          <strong id="rosterSummaryBadge">10 Confirmed Players + 1 Coach</strong>
+        </div>
+      </div>
+
+      <!-- 1. Confirmed Players Section -->
+      <div class="section-subtitle-bar" id="headingConfirmed">
+        <h3>🏐 Confirmed Traveling Squad (10 Players)</h3>
+        <span class="count-pill" id="confirmedCountBadge" style="background:#dcfce7; color:#166534; border:1px solid #bbf7d0;">10 Confirmed</span>
+      </div>
+      <div class="roster-grid" id="rosterContainer">
+        <!-- Rendered dynamically by JS -->
+      </div>
+
+      <!-- 2. Team Coach / Organizer Section -->
+      <div class="section-subtitle-bar" id="headingStaff" style="margin-top: 2rem;">
+        <h3>👔 Team Coach & Organizer</h3>
+        <span class="count-pill" style="background:#e0e7ff; color:#3730a3; border:1px solid #c7d2fe;">1 Confirmed</span>
+      </div>
+      <div class="roster-grid" id="staffContainer">
+        <!-- Rendered dynamically by JS -->
+      </div>
+
+      <!-- 3. Accompanying Family Section -->
+      <div class="section-subtitle-bar" id="headingFamily" style="margin-top: 2rem;">
+        <h3>👥 Accompanying Family & Supporters</h3>
+        <span class="count-pill" style="background:#fef3c7; color:#92400e; border:1px solid #fde68a;">3 Confirmed</span>
+      </div>
+      <div class="roster-grid" id="nonPlayerContainer">
+        <!-- Rendered dynamically by JS -->
+      </div>
+
+      <!-- 4. Declined Section -->
+      <div class="section-subtitle-bar" id="headingDeclined" style="margin-top: 2rem;">
+        <h3>❌ Declined & Unconfirmed (4 Members)</h3>
+        <span class="count-pill" style="background:#fee2e2; color:#991b1b; border:1px solid #fecaca;">3 Declined + 1 No Response</span>
+      </div>
+      <div class="roster-grid" id="declinedContainer">
+        <!-- Rendered dynamically by JS -->
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- TAB 2: ROOMING ALLOCATIONS & ACCOMMODATIONS -->
+    <!-- ======================================================== -->
+    <section id="pane-rooms" class="tab-pane">
+      <div class="pane-header">
+        <div>
+          <h2>Hotel Rooming & Accommodations Allocation</h2>
+          <p class="section-desc">Room pairings and accommodations manifest for the confirmed squad members + supporters in Benidorm.</p>
+        </div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary" id="btnExportRooms">📋 Print Rooming List</button>
+          <button class="btn btn-primary" id="btnOpenAddRoom">➕ Add Room</button>
+        </div>
+      </div>
+
+      <!-- Accor Hotel Group Booking Request Card -->
+      <div class="card hotel-booking-card">
+        <div class="hotel-booking-header">
+          <div class="hotel-title-group">
+            <span class="hotel-badge">🏨 Hotel Group Booking Inquiry</span>
+            <h3>Accor Hotels Benidorm (Ref: HB6I8)</h3>
+            <p class="hotel-sub">Coordinated by Lindsay Robertson (+1 416 569-9403) • Sent to HB6I8@ACCOR.COM</p>
+          </div>
+          <span class="badge-tag badge-warning">📬 Request Sent (Oct 5–11)</span>
+        </div>
+        <div class="hotel-booking-details">
+          <div class="hotel-grid">
+            <div class="hotel-item">
+              <span class="h-label">Dates of Stay</span>
+              <strong>Oct 5 – Oct 11, 2026</strong>
+              <small>6 Nights (Arriving 2 days prior to tournament for acclimatization)</small>
+            </div>
+            <div class="hotel-item">
+              <span class="h-label">Group Size</span>
+              <strong>10 Squad Members</strong>
+              <small>Canadian Men's 55+ Volleyball Team</small>
+            </div>
+            <div class="hotel-item">
+              <span class="h-label">Room Requirement</span>
+              <strong>5 Twin Rooms (10 Beds)</strong>
+              <small>Two separate single beds per room</small>
+            </div>
+            <div class="hotel-item">
+              <span class="h-label">Booking Status</span>
+              <strong>Awaiting Confirmation</strong>
+              <small>Inquiry logged from team correspondence</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Room Summary Stats -->
+      <div class="room-stats-bar">
+        <div class="room-stat-item">
+          <span>Official IVVA Hotel:</span>
+          <strong id="ivvaHotelPaxCount">6 Members</strong>
+        </div>
+        <div class="room-stat-item">
+          <span>Own Accommodation:</span>
+          <strong id="ownBookingPaxCount">2 Members</strong>
+        </div>
+        <div class="room-stat-item">
+          <span>Pending Room Allocation:</span>
+          <strong id="pendingRoomsCount">5 Members</strong>
+        </div>
+      </div>
+
+      <!-- Rooming Grid -->
+      <div class="rooming-grid" id="roomingContainer">
+        <!-- Rendered dynamically by JS -->
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- TAB 3: FLIGHTS & AIRPORT ARRIVALS -->
+    <!-- ======================================================== -->
+    <section id="pane-flights" class="tab-pane">
+      <div class="pane-header">
+        <div>
+          <h2>Team Flight Manifest & Alicante (ALC) Airport Coordination</h2>
+          <p class="section-desc">Live travel itinerary synced with Google Sheet Flights tab. Tracks transatlantic arrival windows, Madrid (MAD) layovers, and airport minivan transfers to Benidorm.</p>
+        </div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary" id="btnExportFlights">📋 Print Flight Manifest</button>
+          <button class="btn btn-primary" id="btnOpenAddFlight">➕ Add Flight</button>
+        </div>
+      </div>
+
+      <!-- Airport & Ground Transfer Strategy Card -->
+      <div class="card flight-strategy-card">
+        <div class="flight-strategy-header">
+          <div class="strategy-icon-box">🛬</div>
+          <div class="strategy-title-group">
+            <h3>Alicante-Elche Miguel Hernández Airport (ALC) Logistics</h3>
+            <p class="strategy-sub">58 km southwest of Benidorm • ~40–45 mins transfer via AP-7 highway</p>
+          </div>
+          <span class="badge-tag badge-indoor">Official Airport: ALC</span>
+        </div>
+        <div class="flight-strategy-grid">
+          <div class="strategy-item">
+            <span class="st-label">Arrival Window</span>
+            <strong>Mon, Oct 5 (09:10 & 20:10 CEST)</strong>
+            <small>Morning group (Toronto via Madrid) & Evening arrival (London)</small>
+          </div>
+          <div class="strategy-item">
+            <span class="st-label">Airport Ground Transfer</span>
+            <strong>Minivans + Official Shuttles</strong>
+            <small>Free transfers for official partner hotel bookings; Minivans coordinated</small>
+          </div>
+          <div class="strategy-item">
+            <span class="st-label">Departure Window</span>
+            <strong>Sun, Oct 11 (09:15 CEST)</strong>
+            <small>Return flights from ALC via Madrid (MAD) to Toronto (YYZ)</small>
+          </div>
+          <div class="strategy-item">
+            <span class="st-label">Transatlantic Route</span>
+            <strong>Iberia / American (YYZ ➔ MAD ➔ ALC)</strong>
+            <small>Overnight flight departs Toronto 17:10 (Oct 4) ➔ Arrives ALC 09:10 (Oct 5)</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flight Filter Bar -->
+      <div class="flight-filters-bar">
+        <div class="filter-group">
+          <label for="flightDirectionFilter">Trip Direction:</label>
+          <select id="flightDirectionFilter" class="form-control form-control-sm">
+            <option value="ALL">All Flight Legs (Outbound & Return)</option>
+            <option value="OUTBOUND" selected>🛫 Outbound to Spain (Oct 4–5, 2026)</option>
+            <option value="RETURN">🛬 Return to Canada / UK (Oct 11, 2026)</option>
+          </select>
+        </div>
+        <div class="flight-stat-pill">
+          <span>Flight Tracking:</span>
+          <strong id="flightSummaryBadge">3 Active Itineraries</strong>
+        </div>
+      </div>
+
+      <!-- Flight Cards Grid -->
+      <div class="flights-grid" id="flightsContainer">
+        <!-- Rendered dynamically by JS -->
+      </div>
+
+      <!-- Pending Flight Submissions Card -->
+      <div class="card pending-flights-card">
+        <div class="card-header">
+          <h3>⏳ Teammates Pending Flight Details</h3>
+          <span class="badge-tag badge-warning">Awaiting Itineraries</span>
+        </div>
+        <p class="section-desc">The following players have not yet logged flight numbers or arrival times. Please provide your booking info to finalize airport minivan pickups:</p>
+        <div class="pending-players-chips" id="pendingFlightChips">
+          <!-- Rendered dynamically by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- TAB 4: MATCHES, TIMELINE & WHATSAPP BROADCAST -->
+    <!-- ======================================================== -->
+    <section id="pane-schedule" class="tab-pane">
+      <div class="pane-header">
+        <div>
+          <h2>IVVA 55+ Match Center & Tournament Milestones</h2>
+          <p class="section-desc">Track official tournament checkpoints, WhatsApp team broadcasts, indoor 6v6 at Palau d'Esports, and beach volleyball at Playa de Poniente.</p>
+        </div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary" id="btnExportSchedule">📥 Export PDF / Print</button>
+          <button class="btn btn-primary" id="btnOpenAddMatch">➕ Add Match / Event</button>
+        </div>
+      </div>
+
+      <!-- Tournament Milestones / Checkpoints Card -->
+      <div class="card timeline-card">
+        <div class="card-header">
+          <h3>📅 Official Tournament Milestones (IVVA Benidorm 2026)</h3>
+        </div>
+        <div class="timeline-stepper">
+          <div class="timeline-step step-urgent">
+            <div class="timeline-marker">1</div>
+            <div class="timeline-info">
+              <div class="timeline-title-row">
+                <strong>Aug 24, 2026</strong>
+                <span class="badge-tag badge-warning">Critical Deadline</span>
+              </div>
+              <p>Roster Form & T-Shirt Sizes Lock. Must submit all player jersey sizes to IVVA to avoid random size allocation.</p>
+            </div>
+          </div>
+          <div class="timeline-step">
+            <div class="timeline-marker">2</div>
+            <div class="timeline-info">
+              <div class="timeline-title-row">
+                <strong>Mon, Oct 5, 2026</strong>
+                <span class="badge-tag badge-logistics">Team Arrival & Hotel Check-in</span>
+              </div>
+              <p>Squad arrives in Benidorm (Hotel Accor booking Oct 5–11 for 5 twin rooms). Rest, jet lag recovery & sunlight acclimatization.</p>
+            </div>
+          </div>
+          <div class="timeline-step">
+            <div class="timeline-marker">3</div>
+            <div class="timeline-info">
+              <div class="timeline-title-row">
+                <strong>Wed, Oct 7, 2026</strong>
+                <span class="badge-tag badge-indoor">Tournament Accreditation</span>
+              </div>
+              <p>Official registration accreditation pass pickup, player credential verification, and Technical Meeting at Palau d'Esports.</p>
+            </div>
+          </div>
+          <div class="timeline-step">
+            <div class="timeline-marker">3</div>
+            <div class="timeline-info">
+              <div class="timeline-title-row">
+                <strong>Thu–Fri, Oct 8–9, 2026</strong>
+                <span class="badge-tag badge-indoor">Indoor & Beach Pool Play</span>
+              </div>
+              <p>FOG Canada 55+ preliminary pool matches across hardwood courts (Palau d'Esports) and sand arena (Playa Poniente).</p>
+            </div>
+          </div>
+          <div class="timeline-step">
+            <div class="timeline-marker">4</div>
+            <div class="timeline-info">
+              <div class="timeline-title-row">
+                <strong>Sat, Oct 10, 2026</strong>
+                <span class="badge-tag badge-beach">Playoffs & Semifinals</span>
+              </div>
+              <p>Quarterfinals and Semifinals for 55+ Indoor & Beach divisions.</p>
+            </div>
+          </div>
+          <div class="timeline-step">
+            <div class="timeline-marker">5</div>
+            <div class="timeline-info">
+              <div class="timeline-title-row">
+                <strong>Sun, Oct 11, 2026</strong>
+                <span class="badge-tag badge-success">Finals & Gala Dinner</span>
+              </div>
+              <p>Championship Gold/Bronze Medal Finals, Awards Ceremony, followed by the official IVVA World Championship Gala Dinner.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick WhatsApp Team Broadcast Generator -->
+      <div class="card whatsapp-broadcast-card">
+        <div class="card-header">
+          <div class="wa-header-left">
+            <span class="wa-icon">💬</span>
+            <div>
+              <h3>Team WhatsApp Group Broadcast Generator</h3>
+              <p class="section-desc">Generate a formatted update with 1-tap copy for the FOG Canada WhatsApp chat.</p>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-sm" id="btnCopyWhatsAppMsg">📋 Copy to Clipboard</button>
+        </div>
+        <div class="wa-preview-box" id="waMessagePreview">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Filters & Quick Stats -->
+      <div class="filter-card">
+        <div class="filter-group">
+          <label for="filterDiscipline">Discipline:</label>
+          <select id="filterDiscipline" class="form-control">
+            <option value="ALL">All Events (Indoor + Beach)</option>
+            <option value="Indoor">🏐 Indoor 55+ (Palau d'Esports)</option>
+            <option value="Beach">🏖️ Beach 55+ (Playa Poniente)</option>
+            <option value="Logistics">🚌 Travel & Social</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filterDay">Tournament Day:</label>
+          <select id="filterDay" class="form-control">
+            <option value="ALL">All Days</option>
+            <option value="Day 1 (Oct 7)">Day 1 - Arrival & Technical Meeting (Oct 7)</option>
+            <option value="Day 2 (Oct 8)">Day 2 - Pool Play Day 1 (Oct 8)</option>
+            <option value="Day 3 (Oct 9)">Day 3 - Pool Play Day 2 (Oct 9)</option>
+            <option value="Day 4 (Oct 10)">Day 4 - Beach Quarter/Semis & Indoor Playoffs (Oct 10)</option>
+            <option value="Day 5 (Oct 11)">Day 5 - Finals & Gala Dinner (Oct 11)</option>
+          </select>
+        </div>
+        <div class="schedule-summary-pill">
+          <span>Scheduled: <strong id="matchCountBadge">0</strong> items</span>
+        </div>
+      </div>
+
+      <!-- Schedule Cards Stream -->
+      <div class="schedule-grid" id="scheduleContainer">
+        <!-- Rendered dynamically by JS -->
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- TAB 4: FINANCES, INVOICE & CAD / EUR BILL SPLITTER -->
+    <!-- ======================================================== -->
+    <section id="pane-finances" class="tab-pane">
+      <div class="pane-header">
+        <div>
+          <h2>CAD ⇄ EUR Converter & FOG Canada Financial Hub</h2>
+          <p class="section-desc">Track verified tournament invoices, Wise bank transfers, and split shared costs in CAD/EUR.</p>
+        </div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" id="btnOpenAddExpense">➕ Log Shared Expense</button>
+        </div>
+      </div>
+
+      <!-- Official Verified Invoice & Wise Wire Card -->
+      <div class="card verified-invoice-card">
+        <div class="verified-invoice-header">
+          <div class="invoice-badge-status">
+            <span class="status-dot"></span>
+            <strong>PAID & VERIFIED (Wise Wire Transfer)</strong>
+          </div>
+          <span class="invoice-ref">Invoice #26090 • Ref: 9036440048</span>
+        </div>
+        <div class="verified-invoice-body">
+          <div class="invoice-detail-grid">
+            <div class="inv-item">
+              <span class="inv-label">Tournament Bill</span>
+              <strong>IVVA 2026 INVOICE #26090</strong>
+              <small>World Veteran Volleyball Championship</small>
+            </div>
+            <div class="inv-item">
+              <span class="inv-label">Team & Category</span>
+              <strong>FOG Canada</strong>
+              <small>Men 55+ (Indoor & Beach)</small>
+            </div>
+            <div class="inv-item">
+              <span class="inv-label">Payment Method</span>
+              <strong>Wise Transfer #2304507222</strong>
+              <small>Direct Bank Wire to IVVA Organizer</small>
+            </div>
+            <div class="inv-item">
+              <span class="inv-label">Roster Included</span>
+              <strong>12 Squad Players + NP Staff</strong>
+              <small>Hotel passes & registration registered</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="finance-top-row">
+        <!-- Live Converter Widget -->
+        <div class="card converter-card">
+          <div class="card-header">
+            <h3>💱 Currency Quick Converter</h3>
+            <div class="rate-config">
+              <label for="fxRateInput">1 EUR = </label>
+              <input type="number" id="fxRateInput" step="0.01" value="1.50" class="mini-input">
+              <span>CAD</span>
+            </div>
+          </div>
+          <div class="converter-body">
+            <div class="calc-row">
+              <div class="calc-input-group">
+                <span class="curr-symbol">€</span>
+                <input type="number" id="inputEur" class="form-control" placeholder="EUR Amount" value="100">
+                <span class="curr-tag">EUR</span>
+              </div>
+              <div class="calc-equal">⇄</div>
+              <div class="calc-input-group">
+                <span class="curr-symbol">$</span>
+                <input type="number" id="inputCad" class="form-control" placeholder="CAD Amount" value="150">
+                <span class="curr-tag">CAD</span>
+              </div>
+            </div>
+            <p class="converter-note">Tip: Contactless payment (Visa/Mastercard) is accepted almost everywhere in Benidorm.</p>
+          </div>
+        </div>
+
+        <!-- Budget Summary -->
+        <div class="card summary-card">
+          <div class="card-header">
+            <h3>📊 Trip Expense Summary</h3>
+          </div>
+          <div class="summary-stats">
+            <div class="stat-box">
+              <span class="stat-title">Total Team Spend</span>
+              <span class="stat-val" id="totalTeamEur">€0.00</span>
+              <span class="stat-sub" id="totalTeamCad">≈ $0.00 CAD</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-title">Est. Per Member (12 Pax)</span>
+              <span class="stat-val" id="perPersonEur">€0.00</span>
+              <span class="stat-sub" id="perPersonCad">≈ $0.00 CAD</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expense List -->
+      <div class="card expenses-table-card">
+        <div class="card-header">
+          <h3>Logged Expenses & Verified Invoices</h3>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table" id="expensesTable">
+            <thead>
+              <tr>
+                <th>Item / Description</th>
+                <th>Category</th>
+                <th>Paid By</th>
+                <th>Cost (EUR)</th>
+                <th>Cost (CAD)</th>
+                <th>Per Person</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="expensesTableBody">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- TAB 4: VENUES & TRANSPORT GUIDE -->
+    <!-- ======================================================== -->
+    <section id="pane-venues" class="tab-pane">
+      <div class="pane-header">
+        <div>
+          <h2>Benidorm Tournament Venues & Transport</h2>
+          <p class="section-desc">Key tournament locations, airport transfer logistics from Alicante (ALC), and emergency medical locations.</p>
+        </div>
+      </div>
+
+      <div class="venues-grid">
+        <!-- Palau d'Esports -->
+        <div class="card venue-card">
+          <div class="venue-badge badge-indoor">🏐 Indoor 55+ Venue</div>
+          <h3>Palau d'Esports l'Illa de Benidorm</h3>
+          <p class="venue-address">📍 Calle de l'Estadi, 03502 Benidorm, Alicante</p>
+          <p class="venue-notes">Main hub for IVVA indoor matches. Multiple wood court halls, changing rooms, air conditioning, and tournament registration desk.</p>
+          <div class="venue-links">
+            <a href="https://maps.google.com/?q=Palau+d'Esports+l'Illa+de+Benidorm" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">🗺️ Open in Google Maps</a>
+          </div>
+        </div>
+
+        <!-- Playa de Poniente -->
+        <div class="card venue-card">
+          <div class="venue-badge badge-beach">🏖️ Beach 55+ Venue</div>
+          <h3>Playa de Poniente (Beach Arena)</h3>
+          <p class="venue-address">📍 Paseo Marítimo de Poniente, Benidorm</p>
+          <p class="venue-notes">Official tournament sand courts along the wide golden beach. Excellent promenade amenities, shaded player zones, and direct sea access.</p>
+          <div class="venue-links">
+            <a href="https://maps.google.com/?q=Playa+de+Poniente+Benidorm" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">🗺️ Open in Google Maps</a>
+          </div>
+        </div>
+
+        <!-- Airport Logistics -->
+        <div class="card venue-card">
+          <div class="venue-badge badge-transport">✈️ Airport Logistics</div>
+          <h3>Alicante-Elche Airport (ALC) Transfer</h3>
+          <p class="venue-address">📍 Distance to Benidorm: ~58 km (40–45 mins)</p>
+          <p class="venue-notes">
+            • <strong>ALSA Direct Bus:</strong> €9.80/person directly from ALC arrivals to Benidorm Bus Station.<br>
+            • <strong>Private Minivan Taxi:</strong> ~€80–€100 total for 6–8 people with volleyball gear bags.<br>
+            • <strong>BeniConnect Shuttle:</strong> Direct hotel drop-off service.
+          </p>
+        </div>
+
+        <!-- Emergency Medical Center -->
+        <div class="card venue-card alert-card">
+          <div class="venue-badge badge-medical">🏥 Medical & Physio Clinic</div>
+          <h3>Hospital IMED Levante (Benidorm)</h3>
+          <p class="venue-address">📍 Calle Dr. Santiago Ramón y Cajal, 7, 03503 Benidorm</p>
+          <p class="venue-notes">
+            • <strong>Emergency 24/7 Phone:</strong> +34 966 878 787 / <strong>112</strong><br>
+            • Top private hospital in Benidorm with full English-speaking staff, sports trauma, X-ray/MRI, and acute joint care.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- TAB 5: SPANISH AUDIO & PHRASE CARDS -->
+    <!-- ======================================================== -->
+    <section id="pane-spanish" class="tab-pane">
+      <div class="pane-header">
+        <div>
+          <h2>Spanish Audio-Phrase Cards & Driver Prompts</h2>
+          <p class="section-desc">Tap to hear audio pronunciation or show full-screen cards to taxi drivers, waiters, and tournament staff.</p>
+        </div>
+      </div>
+
+      <div class="phrase-categories" id="phraseCategoriesContainer">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- TAB 6: 55+ PHYSIO, JET LAG & PACKING -->
+    <!-- ======================================================== -->
+    <section id="pane-physio" class="tab-pane">
+      <div class="pane-header">
+        <div>
+          <h2>55+ Dual-Discipline Physio, Jet Lag & Packing</h2>
+          <p class="section-desc">Key protocols for transitioning between indoor hardwood and beach sand, eastward jet lag recovery, and tournament packing.</p>
+        </div>
+      </div>
+
+      <div class="physio-grid">
+        <!-- Jet Lag Protocol -->
+        <div class="card">
+          <div class="card-header">
+            <h3>✈️ Eastward Jet Lag Protocol (Canada ➔ Spain)</h3>
+          </div>
+          <div class="guide-content">
+            <div class="protocol-step">
+              <span class="step-num">1</span>
+              <div>
+                <strong>In-Flight Eastward Strategy:</strong>
+                <p>On your overnight flight across the Atlantic, set your watch immediately to Spanish Time (CEST). Sleep as soon as meal service ends. Use eye masks and earplugs.</p>
+              </div>
+            </div>
+            <div class="protocol-step">
+              <span class="step-num">2</span>
+              <div>
+                <strong>Day 1 in Benidorm (Sunlight Anchor):</strong>
+                <p>Arrive in Benidorm, avoid taking a long 3-hour afternoon nap. Get 30+ minutes of natural Mediterranean sunlight on the promenade to reset your circadian clock.</p>
+              </div>
+            </div>
+            <div class="protocol-step">
+              <span class="step-num">3</span>
+              <div>
+                <strong>Hydration & Electrolytes:</strong>
+                <p>Airplane cabins cause extreme dehydration. Start electrolyte supplementation 24 hours prior to flight and maintain daily throughout October heat (24°C / 75°F).</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 55+ Sand-to-Hardwood Physio Protocol -->
+        <div class="card">
+          <div class="card-header">
+            <h3>🏐 55+ Dual-Discipline Joint & Recovery Strategy</h3>
+          </div>
+          <div class="guide-content">
+            <div class="protocol-step">
+              <span class="step-num">🏖️</span>
+              <div>
+                <strong>Sand Socks & Achilles Protection:</strong>
+                <p>Deep sand dramatically strains calves, plantar fascia, and Achilles tendons. Wear specialized neoprene sand socks (Vincere / Tunturi) to prevent burns and support feet.</p>
+              </div>
+            </div>
+            <div class="protocol-step">
+              <span class="step-num">🧊</span>
+              <div>
+                <strong>Cold Sea Water Hydrotherapy:</strong>
+                <p>After heavy indoor matches on the Palau d'Esports hardwood, take a 10-minute cold wade in the Mediterranean Sea (Playa de Poniente) to reduce knee and ankle inflammation.</p>
+              </div>
+            </div>
+            <div class="protocol-step">
+              <span class="step-num">🩹</span>
+              <div>
+                <strong>Rotator Cuff & Knee Warmup Routine:</strong>
+                <p>Mandatory 15-minute resistance band warm-up before every match. Apply anti-inflammatory gel (Voltaren / Ibuprofen) post-play if managing joint stiffness.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Packing Checklist -->
+      <div class="card checklist-card">
+        <div class="card-header">
+          <h3>🎒 FOG Canada 55+ Tournament Packing Checklist</h3>
+          <button class="btn btn-secondary btn-sm" id="btnResetChecklist">Reset Checklist</button>
+        </div>
+        <div class="checklist-grid" id="checklistContainer">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: ADD / EDIT MATCH -->
+  <!-- ======================================================== -->
+  <div class="modal-backdrop" id="matchModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="matchModalTitle">Add Match / Event</h3>
+        <button class="modal-close" id="closeMatchModal">&times;</button>
+      </div>
+      <form id="matchForm">
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="mDiscipline">Discipline / Type</label>
+            <select id="mDiscipline" class="form-control" required>
+              <option value="Indoor">🏐 Indoor 55+ (Palau d'Esports)</option>
+              <option value="Beach">🏖️ Beach 55+ (Playa Poniente)</option>
+              <option value="Logistics">🚌 Travel / Meeting / Dinner</option>
+            </select>
+          </div>
+          <div class="form-group col-6">
+            <label for="mDay">Tournament Day</label>
+            <select id="mDay" class="form-control" required>
+              <option value="Day 1 (Oct 7)">Day 1 (Oct 7) - Arrival & Tech Meeting</option>
+              <option value="Day 2 (Oct 8)">Day 2 (Oct 8) - Pool Play Day 1</option>
+              <option value="Day 3 (Oct 9)">Day 3 (Oct 9) - Pool Play Day 2</option>
+              <option value="Day 4 (Oct 10)">Day 4 (Oct 10) - Quarters / Semis</option>
+              <option value="Day 5 (Oct 11)">Day 5 (Oct 11) - Finals & Awards</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="mTime">Local Match Time (Spain CEST)</label>
+            <input type="text" id="mTime" class="form-control" placeholder="e.g. 10:30 AM" required>
+          </div>
+          <div class="form-group col-6">
+            <label for="mCourt">Court / Hall Location</label>
+            <input type="text" id="mCourt" class="form-control" placeholder="e.g. Court 2 / Central Sand" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="mOpponent">Opponent / Event Name</label>
+            <input type="text" id="mOpponent" class="form-control" placeholder="e.g. Team Italy 55+ / Gala Dinner" required>
+          </div>
+          <div class="form-group col-6">
+            <label for="mUniform">Team Kit / Jersey Color</label>
+            <input type="text" id="mUniform" class="form-control" placeholder="e.g. FOG Red & White / FOG Black Tank">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="mNotes">Tactical Notes / Meeting Details</label>
+          <textarea id="mNotes" class="form-control" rows="2" placeholder="Warmup 45 mins prior, hydration check, referee duty"></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancelMatchModal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Event</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: ADD / EDIT ROSTER PLAYER -->
+  <!-- ======================================================== -->
+  <div class="modal-backdrop" id="playerModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Add FOG Team Member</h3>
+        <button class="modal-close" id="closePlayerModal">&times;</button>
+      </div>
+      <form id="playerForm">
+        <div class="form-row">
+          <div class="form-group col-8">
+            <label for="pName">Full Name</label>
+            <input type="text" id="pName" class="form-control" placeholder="e.g. Player Name" required>
+          </div>
+          <div class="form-group col-4">
+            <label for="pNumber">Jersey #</label>
+            <input type="number" id="pNumber" class="form-control" placeholder="10">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="pDob">Date of Birth</label>
+            <input type="text" id="pDob" class="form-control" placeholder="e.g. 1968/10/02">
+          </div>
+          <div class="form-group col-6">
+            <label for="pSize">T-Shirt Size</label>
+            <select id="pSize" class="form-control">
+              <option value="M">M (Medium)</option>
+              <option value="L" selected>L (Large)</option>
+              <option value="XL">XL (Extra Large)</option>
+              <option value="XXL">XXL</option>
+              <option value="Pending">⚠️ Pending / Not Provided</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="pEmail">Email</label>
+            <input type="email" id="pEmail" class="form-control" placeholder="player@email.com">
+          </div>
+          <div class="form-group col-6">
+            <label for="pHotel">IVVA Official Hotel</label>
+            <select id="pHotel" class="form-control">
+              <option value="YES">YES (Official Hotel)</option>
+              <option value="NO">NO (Own Booking)</option>
+              <option value="Pending">Pending / TBD</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="pSocial">Social Media (FB / IG)</label>
+            <input type="text" id="pSocial" class="form-control" placeholder="https://instagram.com/...">
+          </div>
+          <div class="form-group col-6">
+            <label for="pType">Member Type</label>
+            <select id="pType" class="form-control">
+              <option value="Player">Active 55+ Player</option>
+              <option value="Non-Player">Non-Player / Staff / Supporter</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancelPlayerModal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Member</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: ADD LOGGED EXPENSE -->
+  <!-- ======================================================== -->
+  <div class="modal-backdrop" id="expenseModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Log Team Expense</h3>
+        <button class="modal-close" id="closeExpenseModal">&times;</button>
+      </div>
+      <form id="expenseForm">
+        <div class="form-group">
+          <label for="eDesc">Expense Description</label>
+          <input type="text" id="eDesc" class="form-control" placeholder="e.g. Benidorm Team Hotel / Airport Van Rental" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="eCategory">Category</label>
+            <select id="eCategory" class="form-control">
+              <option value="Accommodation">🏨 Accommodation</option>
+              <option value="Transport">🚌 Airport Van / Fuel</option>
+              <option value="Tournament">🏐 IVVA Entry & Passes</option>
+              <option value="Food & Dining">🥘 Team Meals / Paella</option>
+              <option value="Medical & Physio">🩹 Ice / Tape / Supplies</option>
+              <option value="Other">📦 Other</option>
+            </select>
+          </div>
+          <div class="form-group col-6">
+            <label for="ePaidBy">Paid By</label>
+            <input type="text" id="ePaidBy" class="form-control" placeholder="e.g. Team Captain / Shared Fund" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="eAmountEur">Amount in EUR (€)</label>
+            <input type="number" id="eAmountEur" step="0.01" class="form-control" placeholder="e.g. 240.00" required>
+          </div>
+          <div class="form-group col-6">
+            <label for="eSplitCount">Split Among (Persons)</label>
+            <input type="number" id="eSplitCount" class="form-control" value="9" min="1" required>
+          </div>
+        </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: ADD / EDIT ROOM -->
+  <!-- ======================================================== -->
+  <div class="modal-backdrop" id="roomModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Add / Edit Room Allocation</h3>
+        <button class="modal-close" id="closeRoomModal">&times;</button>
+      </div>
+      <form id="roomForm">
+        <div class="form-row">
+          <div class="form-group col-8">
+            <label for="rName">Room Label / Number</label>
+            <input type="text" id="rName" class="form-control" placeholder="e.g. Room 101 / Suite / Villa East" required>
+          </div>
+          <div class="form-group col-4">
+            <label for="rType">Bed Type</label>
+            <select id="rType" class="form-control">
+              <option value="Twin (2 Single Beds)">🛏️ Twin (2 Single Beds)</option>
+              <option value="Double / King">🛌 Double / King</option>
+              <option value="Single">👤 Single</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="rHotelType">Hotel / Booking Location</label>
+            <select id="rHotelType" class="form-control">
+              <option value="IVVA Hotel">🏨 Official IVVA Hotel</option>
+              <option value="Own Booking">🏠 Own Apartment / Booking</option>
+            </select>
+          </div>
+          <div class="form-group col-6">
+            <label for="rOccupants">Occupants (Comma separated)</label>
+            <input type="text" id="rOccupants" class="form-control" placeholder="e.g. Diogo Burnay, Lindsay Robertson" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="rNotes">Room Notes / Check-in Request</label>
+          <textarea id="rNotes" class="form-control" rows="2" placeholder="e.g. Requested 2 single duvets; quiet floor"></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancelRoomModal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Room</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADD FLIGHT MODAL -->
+  <div class="modal-backdrop" id="flightModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>✈️ Add / Update Teammate Flight</h3>
+        <button class="modal-close" id="closeFlightModal">✕</button>
+      </div>
+      <form id="flightForm">
+        <div class="form-group">
+          <label for="flName">Teammate / Traveler Name</label>
+          <input type="text" id="flName" class="form-control" placeholder="e.g. Diogo Burnay" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="flDirection">Trip Direction</label>
+            <select id="flDirection" class="form-control">
+              <option value="OUTBOUND">🛫 Outbound (To Spain)</option>
+              <option value="RETURN">🛬 Return (From Spain)</option>
+            </select>
+          </div>
+          <div class="form-group col-6">
+            <label for="flDate">Travel Date</label>
+            <input type="text" id="flDate" class="form-control" placeholder="e.g. Sun Oct 4 or Oct 5" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="flOrigin">Departure Airport / City</label>
+            <input type="text" id="flOrigin" class="form-control" placeholder="e.g. Toronto (YYZ)" required>
+          </div>
+          <div class="form-group col-6">
+            <label for="flDest">Arrival Airport / City</label>
+            <input type="text" id="flDest" class="form-control" placeholder="e.g. Alicante (ALC)" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="flAirline">Airline & Flight Number</label>
+            <input type="text" id="flAirline" class="form-control" placeholder="e.g. Iberia IB 0368 / IB 1009" required>
+          </div>
+          <div class="form-group col-6">
+            <label for="flArrival">Arrival Time at Final Dest</label>
+            <input type="text" id="flArrival" class="form-control" placeholder="e.g. 09:10 CEST" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="flRoute">Connecting Route & Layover Details</label>
+          <input type="text" id="flRoute" class="form-control" placeholder="e.g. Departs 17:10 ➔ Madrid layover 1h 15m ➔ Alicante 09:10">
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancelFlightModal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Flight</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
