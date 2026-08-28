@@ -126,12 +126,12 @@ const FOG_PLAYERS = [
     dob: "1965-11-24",
     position: "Setter",
     status: "Confirmed",
-    roomAssignment: "Room 4 of 4 (with Stefano)",
+    roomAssignment: "Own Booking (NO to IVVA Hotel)",
     emails: ["victorealaniz@hotmail.com"],
     phone: "+34 640 086 323",
     phoneClean: "34640086323",
     size: "L",
-    hotel: "Team Hotel",
+    hotel: "Own Booking",
     type: "Player",
     location: "Spain",
     socials: []
@@ -177,12 +177,12 @@ const FOG_PLAYERS = [
     dob: "1971-07",
     position: "Outside",
     status: "Confirmed",
-    roomAssignment: "Room 4 of 4 (with Victor)",
+    roomAssignment: "Own Booking (NO to IVVA Hotel)",
     emails: ["mupi71@hotmail.com"],
     phone: "+39 335 712 5712",
     phoneClean: "393357125712",
-    size: "Pending",
-    hotel: "Team Hotel",
+    size: "XL",
+    hotel: "Own Booking",
     type: "Player",
     location: "Italy",
     socials: []
@@ -286,7 +286,6 @@ const FOG_NON_PLAYERS = [
     emails: [],
     phone: "",
     phoneClean: "",
-    size: "Pending",
     hotel: "Own Booking",
     type: "Non-Player",
     location: "Ontario",
@@ -301,7 +300,6 @@ const FOG_NON_PLAYERS = [
     emails: [],
     phone: "",
     phoneClean: "",
-    size: "Pending",
     hotel: "Team Hotel",
     type: "Non-Player",
     location: "Edmonton, AB",
@@ -316,7 +314,6 @@ const FOG_NON_PLAYERS = [
     emails: [],
     phone: "",
     phoneClean: "",
-    size: "Pending",
     hotel: "Own Booking",
     type: "Non-Player",
     location: "Calgary, AB",
@@ -396,36 +393,24 @@ const DEFAULT_ROOMS = [
 
 const DEFAULT_EXPENSES = [
   {
-    id: "e1",
-    desc: "IVVA Invoice #26090 - Team Entry & Official Passes (Wise #2304507222)",
-    category: "Tournament",
-    paidBy: "FOG Fund (Wise Wire)",
-    amountEur: 1200.00,
-    splitCount: 12
+    id: "exp_1",
+    date: "11 Aug 2026",
+    desc: "Registration Deposit (280 EUR)",
+    category: "Tournament Entry",
+    paidBy: "Lindsay",
+    amountEur: 280.00,
+    amountCad: 455.10,
+    splitCount: 10
   },
   {
-    id: "e2",
-    desc: "Benidorm Official IVVA Hotel Booking Deposit",
+    id: "exp_2",
+    date: "19 Aug 2026",
+    desc: "Hotel Blocking of Rooms (1,020 EUR)",
     category: "Accommodation",
-    paidBy: "Phil Q.",
-    amountEur: 2200.00,
-    splitCount: 12
-  },
-  {
-    id: "e3",
-    desc: "Alicante Airport (ALC) Minivans Rental (7 Days)",
-    category: "Transport",
-    paidBy: "Diogo B.",
-    amountEur: 890.00,
-    splitCount: 12
-  },
-  {
-    id: "e4",
-    desc: "Physio Supplies, First Aid & Sand Socks",
-    category: "Medical & Physio",
-    paidBy: "Shared Fund",
-    amountEur: 180.00,
-    splitCount: 12
+    paidBy: "Lindsay",
+    amountEur: 1020.00,
+    amountCad: 1659.25,
+    splitCount: 10
   }
 ];
 
@@ -577,41 +562,59 @@ const DEFAULT_PENDING_FLIGHTS = [
   "Mike Sieben",
   "Victor Alaniz",
   "Stefano Gaibazzi",
+  "George Tokarsky"
+];
+
 // Clean up any legacy localStorage versions from previous sessions
 try {
-  for (let i = localStorage.length - 1; i >= 0; i--) {
-    const k = localStorage.key(i);
-    if (k && k.startsWith("fog_") && !k.includes("_v12") && k !== "fog_checklist" && k !== "fog_fx_rate") {
+  Object.keys(localStorage).forEach(k => {
+    if (k && k.startsWith("fog_") && !k.includes("_v14") && k !== "fog_checklist" && k !== "fog_fx_rate") {
       localStorage.removeItem(k);
     }
-  }
+  });
 } catch (e) {}
 
-// App State (v12 confirmed 10 traveling players with Jerry Aldridge strictly in Declined)
-let players = JSON.parse(localStorage.getItem("fog_players_v12")) || FOG_PLAYERS;
-let staff = JSON.parse(localStorage.getItem("fog_staff_v12")) || FOG_STAFF;
-let nonPlayers = JSON.parse(localStorage.getItem("fog_non_players_v12")) || FOG_NON_PLAYERS;
-let rooms = JSON.parse(localStorage.getItem("fog_rooms_v12")) || DEFAULT_ROOMS;
-let flights = JSON.parse(localStorage.getItem("fog_flights_v12")) || DEFAULT_FLIGHTS;
-let matches = JSON.parse(localStorage.getItem("fog_matches_v12")) || DEFAULT_MATCHES;
-let expenses = JSON.parse(localStorage.getItem("fog_expenses_v12")) || DEFAULT_EXPENSES;
+// App State (v14 supporters and declined players excluded from shirt size requirements)
+let players = JSON.parse(localStorage.getItem("fog_players_v14")) || FOG_PLAYERS;
+let staff = JSON.parse(localStorage.getItem("fog_staff_v14")) || FOG_STAFF;
+let nonPlayers = JSON.parse(localStorage.getItem("fog_non_players_v14")) || FOG_NON_PLAYERS;
+let rooms = JSON.parse(localStorage.getItem("fog_rooms_v14")) || DEFAULT_ROOMS;
+let flights = JSON.parse(localStorage.getItem("fog_flights_v14")) || DEFAULT_FLIGHTS;
+let matches = JSON.parse(localStorage.getItem("fog_matches_v14")) || DEFAULT_MATCHES;
+let expenses = JSON.parse(localStorage.getItem("fog_expenses_v14")) || DEFAULT_EXPENSES;
 let checklistDone = JSON.parse(localStorage.getItem("fog_checklist")) || {};
 let fxRate = parseFloat(localStorage.getItem("fog_fx_rate")) || 1.50;
 
-// Initialize on DOM Ready
-document.addEventListener("DOMContentLoaded", () => {
-  initClocks();
-  initTabs();
-  initRoster();
-  initRooms();
-  initFlights();
-  initSchedule();
-  initFinances();
-  initSpanishPhrases();
-  initPhysioChecklist();
-  initWhatsAppBroadcast();
-  initModals();
-});
+// Safe, isolated startup wrapper for all environments (GitHub Pages, local, mobile)
+function startApp() {
+  const routines = [
+    ["Clocks", initClocks],
+    ["Tabs", initTabs],
+    ["Roster", initRoster],
+    ["Rooms", initRooms],
+    ["Flights", initFlights],
+    ["Schedule", initSchedule],
+    ["Finances", initFinances],
+    ["SpanishPhrases", initSpanishPhrases],
+    ["PhysioChecklist", initPhysioChecklist],
+    ["WhatsAppBroadcast", initWhatsAppBroadcast],
+    ["Modals", initModals]
+  ];
+
+  routines.forEach(([name, fn]) => {
+    try {
+      if (typeof fn === "function") fn();
+    } catch (err) {
+      console.warn(`[FOG Hub] Non-critical warning initializing ${name}:`, err);
+    }
+  });
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", startApp);
+} else {
+  startApp();
+}
 
 // ==========================================================================
 // 1. DUAL TIMEZONE CLOCKS
@@ -668,19 +671,23 @@ function initClocks() {
 // 2. TAB NAVIGATION
 // ==========================================================================
 function initTabs() {
-  const tabButtons = document.querySelectorAll(".tab-btn");
-  const tabPanes = document.querySelectorAll(".tab-pane");
+  window.switchTab = function(tabName) {
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    const tabPanes = document.querySelectorAll(".tab-pane");
+    tabButtons.forEach(b => {
+      if (b.dataset.tab === tabName) b.classList.add("active");
+      else b.classList.remove("active");
+    });
+    tabPanes.forEach(p => {
+      if (p.id === `pane-${tabName}`) p.classList.add("active");
+      else p.classList.remove("active");
+    });
+  };
 
+  const tabButtons = document.querySelectorAll(".tab-btn");
   tabButtons.forEach(btn => {
     btn.addEventListener("click", () => {
-      tabButtons.forEach(b => b.classList.remove("active"));
-      tabPanes.forEach(p => p.classList.remove("active"));
-
-      btn.classList.add("active");
-      const targetPane = document.getElementById(`pane-${btn.dataset.tab}`);
-      if (targetPane) {
-        targetPane.classList.add("active");
-      }
+      if (btn.dataset.tab) window.switchTab(btn.dataset.tab);
     });
   });
 }
@@ -709,11 +716,10 @@ function initRoster() {
     const confirmedPlayers = players.filter(p => p.status === "Confirmed");
     const declinedPlayers = players.filter(p => p.status !== "Confirmed");
 
-    // Pending sizes check across confirmed players, staff, and non-players
+    // Pending sizes check across ONLY confirmed traveling squad players and staff
     const pendingConfirmed = confirmedPlayers.filter(p => p.size === "Pending" || p.size === "Fill");
     const pendingStaff = staff.filter(s => s.size === "Pending" || s.size === "Fill");
-    const pendingFamily = nonPlayers.filter(np => np.size === "Pending" || np.size === "Fill");
-    const totalPending = pendingConfirmed.length + pendingStaff.length + pendingFamily.length;
+    const totalPending = pendingConfirmed.length + pendingStaff.length;
 
     if (pendingBadge) {
       if (totalPending > 0) {
@@ -803,10 +809,9 @@ function initRoster() {
       }).join("");
     }
 
-    // 3. Render Family / Supporters
+    // 3. Render Family / Supporters (No shirt size required)
     if (nonPlayerContainer && showFamily) {
       nonPlayerContainer.innerHTML = nonPlayers.map(np => {
-        const isSizePending = np.size === "Pending" || np.size === "Fill";
         const emailList = Array.isArray(np.emails) ? np.emails : (np.email ? [np.email] : []);
 
         return `
@@ -825,13 +830,11 @@ function initRoster() {
             <div class="player-meta-grid">
               <div class="meta-item">
                 <strong>Email</strong>
-                <span>${emailList.length > 0 ? emailList.join(", ") : "Pending"}</span>
+                <span>${emailList.length > 0 ? emailList.join(", ") : "None"}</span>
               </div>
               <div class="meta-item">
-                <strong>T-Shirt Size</strong>
-                <span class="${isSizePending ? 'badge-size-warn' : 'badge-size-ok'}">
-                  ${isSizePending ? '⚠️ Pending' : `${escapeHtml(np.size)} (Confirmed)`}
-                </span>
+                <strong>Role</strong>
+                <span>Accompanying Supporter</span>
               </div>
               <div class="meta-item">
                 <strong>Hotel / Stay</strong>
@@ -847,7 +850,7 @@ function initRoster() {
       }).join("");
     }
 
-    // 4. Render Declined Players
+    // 4. Render Declined Players (No shirt size required)
     if (declinedContainer && showDeclined) {
       declinedContainer.innerHTML = declinedPlayers.map(p => renderPlayerCard(p, true)).join("");
     }
@@ -905,22 +908,39 @@ function initRoster() {
                 : "None"}
             </span>
           </div>
-          <div class="meta-item">
-            <strong>T-Shirt Size</strong>
-            <span class="${isSizePending ? 'badge-size-warn' : 'badge-size-ok'}">
-              ${isDeclined ? (isNoResponse ? '⚠️ Unconfirmed' : 'N/A') : (isSizePending ? '⚠️ Pending' : `${escapeHtml(p.size)} (Confirmed)`)}
-            </span>
-          </div>
-          <div class="meta-item">
-            <strong>Date of Birth</strong>
-            <span>${escapeHtml(p.dob || "N/A")}</span>
-          </div>
-          <div class="meta-item">
-            <strong>Status / Hotel</strong>
-            <span class="${isDeclined ? (isNoResponse ? 'badge-hotel-pending' : 'badge-status-declined') : hotelClass}">
-              ${isDeclined ? (isNoResponse ? 'Unconfirmed (TBC)' : 'Not Attending') : hotelText}
-            </span>
-          </div>
+          ${!isDeclined ? `
+            <div class="meta-item">
+              <strong>T-Shirt Size</strong>
+              <span class="${isSizePending ? 'badge-size-warn' : 'badge-size-ok'}">
+                ${isSizePending ? '⚠️ Pending' : `${escapeHtml(p.size)} (Confirmed)`}
+              </span>
+            </div>
+            <div class="meta-item">
+              <strong>Date of Birth</strong>
+              <span>${escapeHtml(p.dob || "N/A")}</span>
+            </div>
+            <div class="meta-item">
+              <strong>Status / Hotel</strong>
+              <span class="${hotelClass}">${hotelText}</span>
+            </div>
+          ` : `
+            <div class="meta-item">
+              <strong>Status</strong>
+              <span class="${isNoResponse ? 'badge-hotel-pending' : 'badge-status-declined'}">
+                ${isNoResponse ? '⚠️ No Response / TBC' : '❌ Declined'}
+              </span>
+            </div>
+            <div class="meta-item">
+              <strong>Location</strong>
+              <span>${escapeHtml(p.location || "Canada")}</span>
+            </div>
+            <div class="meta-item">
+              <strong>Attendance</strong>
+              <span class="${isNoResponse ? 'badge-hotel-pending' : 'badge-status-declined'}">
+                ${isNoResponse ? 'Unconfirmed' : 'Not Attending'}
+              </span>
+            </div>
+          `}
         </div>
 
         ${p.socials && p.socials.length > 0 ? `
@@ -969,9 +989,9 @@ function initRoster() {
 }
 
 function saveRoster() {
-  localStorage.setItem("fog_players_v12", JSON.stringify(players));
-  localStorage.setItem("fog_staff_v12", JSON.stringify(staff));
-  localStorage.setItem("fog_non_players_v12", JSON.stringify(nonPlayers));
+  localStorage.setItem("fog_players_v14", JSON.stringify(players));
+  localStorage.setItem("fog_staff_v14", JSON.stringify(staff));
+  localStorage.setItem("fog_non_players_v14", JSON.stringify(nonPlayers));
 }
 
 // ==========================================================================
@@ -1072,7 +1092,7 @@ function initSchedule() {
 }
 
 function saveMatches() {
-  localStorage.setItem("fog_matches_v12", JSON.stringify(matches));
+  localStorage.setItem("fog_matches_v14", JSON.stringify(matches));
 }
 
 // ==========================================================================
@@ -1113,19 +1133,22 @@ function initFinances() {
 
   function renderExpenses() {
     let totalEur = 0;
+    let totalCadActual = 0;
 
     tableBody.innerHTML = expenses.map(e => {
       totalEur += e.amountEur;
-      const cadTotal = e.amountEur * fxRate;
-      const splitPax = e.splitCount || players.length || 14;
+      const cadTotal = e.amountCad || (e.amountEur * fxRate);
+      totalCadActual += cadTotal;
+      const splitPax = e.splitCount || 10;
       const perPersonEur = e.amountEur / splitPax;
       const perPersonCad = cadTotal / splitPax;
 
       return `
         <tr>
+          <td><span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">📅 ${escapeHtml(e.date || "Logged")}</span></td>
           <td><strong>${escapeHtml(e.desc)}</strong></td>
           <td><span class="badge-tag badge-logistics">${escapeHtml(e.category)}</span></td>
-          <td>${escapeHtml(e.paidBy)}</td>
+          <td><strong>${escapeHtml(e.paidBy)}</strong></td>
           <td>€${e.amountEur.toFixed(2)}</td>
           <td>$${cadTotal.toFixed(2)} CAD</td>
           <td>
@@ -1139,8 +1162,8 @@ function initFinances() {
       `;
     }).join("");
 
-    const totalCad = totalEur * fxRate;
-    const splitPax = players.length || 14;
+    const totalCad = totalCadActual;
+    const splitPax = 10;
     const avgPerPersonEur = totalEur / splitPax;
     const avgPerPersonCad = totalCad / splitPax;
 
@@ -1163,7 +1186,7 @@ function initFinances() {
 }
 
 function saveExpenses() {
-  localStorage.setItem("fog_expenses_v12", JSON.stringify(expenses));
+  localStorage.setItem("fog_expenses_v14", JSON.stringify(expenses));
 }
 
 // ==========================================================================
@@ -1211,6 +1234,8 @@ function initPhysioChecklist() {
   const container = document.getElementById("checklistContainer");
   const btnReset = document.getElementById("btnResetChecklist");
 
+  if (!container) return;
+
   function render() {
     container.innerHTML = CHECKLIST_ITEMS.map(item => {
       const isChecked = !!checklistDone[item.id];
@@ -1229,19 +1254,21 @@ function initPhysioChecklist() {
     render();
   };
 
-  btnReset.addEventListener("click", () => {
-    if (confirm("Reset all checklist checkboxes?")) {
-      checklistDone = {};
-      localStorage.setItem("fog_checklist", JSON.stringify(checklistDone));
-      render();
-    }
-  });
+  if (btnReset) {
+    btnReset.addEventListener("click", () => {
+      if (confirm("Reset all checklist items?")) {
+        checklistDone = {};
+        localStorage.setItem("fog_checklist", JSON.stringify(checklistDone));
+        render();
+      }
+    });
+  }
 
   render();
 }
 
 // ==========================================================================
-// 8. ROOMING & CAMA ALEMANA ALLOCATIONS
+// 8. HOTEL ROOMING & BED CONFIGURATION
 // ==========================================================================
 function initRooms() {
   const container = document.getElementById("roomingContainer");
@@ -1264,7 +1291,7 @@ function initRooms() {
       (r.occupants || []).forEach(name => assignedNames.add(name.toLowerCase().trim()));
     });
 
-    const activeSquadMembers = players.filter(p => p.status !== "Declined");
+    const activeSquadMembers = players.filter(p => p.status === "Confirmed");
     let pendingCount = 0;
     activeSquadMembers.forEach(p => {
       if (!assignedNames.has(p.name.toLowerCase().trim())) pendingCount++;
@@ -1408,7 +1435,6 @@ function initFlights() {
       }).join("");
     }
 
-    // Render Pending Flights Chips (Only confirmed active traveling members)
     const activeFlightTravelers = new Set(flights.map(f => f.traveler.toLowerCase().trim()));
     const pendingTravelers = players.filter(p => p.status === "Confirmed" && !activeFlightTravelers.has(p.name.toLowerCase().trim()));
 
@@ -1435,11 +1461,11 @@ function initFlights() {
 }
 
 function saveFlights() {
-  localStorage.setItem("fog_flights_v12", JSON.stringify(flights));
+  localStorage.setItem("fog_flights_v14", JSON.stringify(flights));
 }
 
 function saveRooms() {
-  localStorage.setItem("fog_rooms_v12", JSON.stringify(rooms));
+  localStorage.setItem("fog_rooms_v14", JSON.stringify(rooms));
 }
 
 // ==========================================================================

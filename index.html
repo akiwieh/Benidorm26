@@ -11,7 +11,27 @@
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="shortcut icon" href="favicon-16x16.png">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=14.1">
+  <script>
+    function switchTab(tabName) {
+      var tabButtons = document.querySelectorAll(".tab-btn");
+      var tabPanes = document.querySelectorAll(".tab-pane");
+      for (var i = 0; i < tabButtons.length; i++) {
+        if (tabButtons[i].getAttribute("data-tab") === tabName) {
+          tabButtons[i].classList.add("active");
+        } else {
+          tabButtons[i].classList.remove("active");
+        }
+      }
+      for (var j = 0; j < tabPanes.length; j++) {
+        if (tabPanes[j].id === "pane-" + tabName) {
+          tabPanes[j].classList.add("active");
+        } else {
+          tabPanes[j].classList.remove("active");
+        }
+      }
+    }
+  </script>
 </head>
 <body>
   <!-- Header Bar -->
@@ -62,28 +82,28 @@
     <!-- Navigation Tabs -->
     <nav class="nav-tabs-container">
       <div class="nav-tabs" role="tablist">
-        <button class="tab-btn active" data-tab="roster" role="tab" id="tab-roster">
+        <button class="tab-btn active" data-tab="roster" role="tab" id="tab-roster" onclick="switchTab('roster')">
           <span class="tab-icon">👥</span> FOG Roster & Directory
         </button>
-        <button class="tab-btn" data-tab="rooms" role="tab" id="tab-rooms">
+        <button class="tab-btn" data-tab="rooms" role="tab" id="tab-rooms" onclick="switchTab('rooms')">
           <span class="tab-icon">🛏️</span> Rooming & Accommodations
         </button>
-        <button class="tab-btn" data-tab="flights" role="tab" id="tab-flights">
+        <button class="tab-btn" data-tab="flights" role="tab" id="tab-flights" onclick="switchTab('flights')">
           <span class="tab-icon">✈️</span> Flights & Arrivals
         </button>
-        <button class="tab-btn" data-tab="schedule" role="tab" id="tab-schedule">
+        <button class="tab-btn" data-tab="schedule" role="tab" id="tab-schedule" onclick="switchTab('schedule')">
           <span class="tab-icon">🏐</span> Matches & Checkpoints
         </button>
-        <button class="tab-btn" data-tab="finances" role="tab" id="tab-finances">
+        <button class="tab-btn" data-tab="finances" role="tab" id="tab-finances" onclick="switchTab('finances')">
           <span class="tab-icon">💶</span> CAD ⇄ EUR & Invoice
         </button>
-        <button class="tab-btn" data-tab="venues" role="tab" id="tab-venues">
+        <button class="tab-btn" data-tab="venues" role="tab" id="tab-venues" onclick="switchTab('venues')">
           <span class="tab-icon">📍</span> Venues & Transport
         </button>
-        <button class="tab-btn" data-tab="spanish" role="tab" id="tab-spanish">
+        <button class="tab-btn" data-tab="spanish" role="tab" id="tab-spanish" onclick="switchTab('spanish')">
           <span class="tab-icon">💬</span> Spanish Audio-Cards
         </button>
-        <button class="tab-btn" data-tab="physio" role="tab" id="tab-physio">
+        <button class="tab-btn" data-tab="physio" role="tab" id="tab-physio" onclick="switchTab('physio')">
           <span class="tab-icon">🩹</span> 55+ Physio & Packing
         </button>
       </div>
@@ -108,12 +128,12 @@
         </div>
       </div>
 
-      <!-- Quick Action / Deadline Banner -->
-      <div class="alert-banner">
-        <div class="alert-icon">⚠️</div>
+      <!-- Quick Action / Status Banner -->
+      <div class="alert-banner" style="background: #f0fdf4; border-left-color: var(--color-success);">
+        <div class="alert-icon">✅</div>
         <div class="alert-content">
-          <strong>IVVA Deadline Reminder (Aug 24, 2026):</strong> T-shirt sizes must be finalized by <strong>24.08.2026</strong> or random sizes will be allocated. 
-          <span class="badge-pending-count" id="pendingSizesBadge">Checking sizes...</span>
+          <strong>IVVA Roster Status:</strong> All 10 traveling player T-shirt sizes and registration details are now <strong>100% confirmed</strong>!
+          <span class="badge-pending-count" id="pendingSizesBadge" style="background: var(--color-success);">All sizes confirmed ✓</span>
         </div>
       </div>
 
@@ -504,7 +524,7 @@
             </div>
             <div class="inv-item">
               <span class="inv-label">Roster Included</span>
-              <strong>12 Squad Players + NP Staff</strong>
+              <strong>10 Squad Players + 1 Coach</strong>
               <small>Hotel passes & registration registered</small>
             </div>
           </div>
@@ -543,7 +563,7 @@
         <!-- Budget Summary -->
         <div class="card summary-card">
           <div class="card-header">
-            <h3>📊 Trip Expense Summary</h3>
+            <h3>📊 Trip Expense Summary (Synced with Google Sheet)</h3>
           </div>
           <div class="summary-stats">
             <div class="stat-box">
@@ -552,7 +572,7 @@
               <span class="stat-sub" id="totalTeamCad">≈ $0.00 CAD</span>
             </div>
             <div class="stat-box">
-              <span class="stat-title">Est. Per Member (12 Pax)</span>
+              <span class="stat-title">Est. Per Member (10 Players)</span>
               <span class="stat-val" id="perPersonEur">€0.00</span>
               <span class="stat-sub" id="perPersonCad">≈ $0.00 CAD</span>
             </div>
@@ -563,18 +583,19 @@
       <!-- Expense List -->
       <div class="card expenses-table-card">
         <div class="card-header">
-          <h3>Logged Expenses & Verified Invoices</h3>
+          <h3>Logged Real Expenses (From Google Sheet)</h3>
         </div>
         <div class="table-responsive">
           <table class="data-table" id="expensesTable">
             <thead>
               <tr>
+                <th>Date</th>
                 <th>Item / Description</th>
                 <th>Category</th>
                 <th>Paid By</th>
                 <th>Cost (EUR)</th>
                 <th>Cost (CAD)</th>
-                <th>Per Person</th>
+                <th>Per Member (10)</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -1047,6 +1068,6 @@
     </div>
   </div>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=14.1"></script>
 </body>
 </html>
